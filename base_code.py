@@ -2,8 +2,8 @@ import pygame
 import time 
 pygame.font.init()
 
-WIDTH = 900
-HEIGHT = 700
+WIDTH = 1000
+HEIGHT = 512
 
 PLAYER_WIDTH = 40
 PLAYER_HEIGHT = 60
