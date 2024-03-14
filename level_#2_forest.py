@@ -23,7 +23,7 @@ class Player():
     self.rect.y = y
     self.vel_y = 0
     self.jumped = False
-    self.vel_x = 2
+    self.vel_x = 1
 
   def update(self):
     dx = 0
@@ -127,6 +127,8 @@ def draw(screen):
     player.update()
     pygame.display.update()
 
+clock = pygame.time.Clock()
+
 def main():
     run = True
 
@@ -135,9 +137,12 @@ def main():
             if event.type == pygame.QUIT:  
                 run = False
                 break
+
+        clock.tick(60)
          
         draw(screen)
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
