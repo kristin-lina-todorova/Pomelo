@@ -175,17 +175,27 @@ def show_question():
     entry = tk.Entry(root)
     entry.pack()
 
+    message_label = tk.Label(root, text="", fg="red")  # Етикет за съобщенията
+    message_label.pack()
+
     def check_answer():
-        global question_displayed
         answer = entry.get()
         if answer == "4":
             root.destroy() 
             question_displayed = False
-
+        else: message_label.config(text="Incorrect answer")
 
 
     button = tk.Button(root, text="Submit", command=check_answer)
     button.pack()
+
+    def on_closing():
+        root.destroy()
+        question_displayed = False
+        show_question()
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
     root.mainloop()
 
 question_displayed = False 
