@@ -33,13 +33,13 @@ class Player():
         self.vel_y = 0
         self.jumped = False
         self.direction = 0
-        self.vel_x = 2 #to control animation speed
+        self.vel_x = 2
 
     def update(self):
         dx = 0
         dy = 0
         num = 0
-        # get keypresses
+   
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE] and self.jumped == False:
             self.vel_y = -20
@@ -53,31 +53,29 @@ class Player():
             dx += 30
             self.direction = 1
 
-         # add gravity
         self.vel_y += 20
         if self.vel_y > 10:
             self.vel_y = 10
         dy += self.vel_y
-
-        # Update animation frame
-        if dx != 0:  # If moving
+      
+        if dx != 0: 
             self.image_index = (self.image_index + 1) % len(self.animation_frames)
             self.image = self.animation_frames[self.image_index]
-        else:  # If standing
+        else: 
             self.image = self.standing_image
 
         question_displayed = False
         for tile_group in world.tile_groups:
             for tile in tile_group.tile_list:
                 if tile[1].colliderect(self.rect.move(dx, 0)):
-                    # choveka udrq platformata nastrani
+                    
                     dx = 0
                     if not tile_group.visited:
                         show_question()
                         tile_group.visited = True
                         question_displayed = True
                 if tile[1].colliderect(self.rect.move(0, dy)):
-                    # choveka udrq platformata nadolu
+
                     if not tile_group.visited:
                         show_question()
                         tile_group.visited = True
@@ -89,7 +87,6 @@ class Player():
                         dy = tile[1].top - self.rect.bottom
                         self.vel_y = 0
 
-         # update player coordinates
         self.rect.x += dx
         self.rect.y += dy
 
@@ -97,7 +94,6 @@ class Player():
             self.rect.bottom = HEIGHT
             dy = 0
 
-        # draw player onto screen
         screen.blit(self.image, self.rect)
 
 
@@ -193,7 +189,7 @@ def show_question():
     entry = tk.Entry(root)
     entry.pack()
 
-    message_label = tk.Label(root, text="", fg="red")  # Етикет за съобщенията
+    message_label = tk.Label(root, text="", fg="red")
     message_label.pack()
 
     def check_answer():
@@ -233,14 +229,11 @@ while run:
             run = False
 
     current_image = (current_image + 1) % num_images
-    screen.blit(bg_images[current_image], (0, 0))  # Рисуване на текущата картинка
-    pygame.display.flip()  # Обновяване на екрана
+    screen.blit(bg_images[current_image], (0, 0)) 
+    pygame.display.flip() 
     draw(screen)
     clock.tick(5)
-    # Рисуване на текущата картинка
-    # Обновяване на играча
     
-
     if not question_displayed:
         if pygame.mouse.get_pressed()[2]:
             x, y = pygame.mouse.get_pos()
