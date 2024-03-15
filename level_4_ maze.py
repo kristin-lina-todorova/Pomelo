@@ -2,7 +2,7 @@ import pygame
 import sys
 import os
 from io import StringIO
-from compile import execute_python_code
+from level_4_compile import execute_python_code
 pygame.init()
 
 WIDTH = 1000

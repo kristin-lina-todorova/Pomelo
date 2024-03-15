@@ -13,7 +13,9 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
 
-font = pygame.font.Font(None, 32)
+FONT = pygame.font.Font("comicsans", 32)
+BG = pygame.transform.scale(pygame.image.load("level_3_debug\level_3_basement_bg.png"), (WIDTH, HEIGHT))
+
 
 correct_code = "1234"
 entered_code = ""
