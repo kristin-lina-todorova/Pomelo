@@ -5,8 +5,8 @@ from io import StringIO
 from level_4_compile import execute_python_code
 pygame.init()
 
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 512 
+WIDTH = 1000
+HEIGHT = 512 
 
 COMP_WIDTH = 40
 COMP_HEIGHT = 30
@@ -16,19 +16,33 @@ BUTTON_HEIGHT = 50
 
 FONT = pygame.font.SysFont("comicsans", 30)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Labyrinth game")
 
-BG_IMAGE = pygame.image.load(os.path.join('assets', '436175.png'))
-BG = pygame.transform.scale(BG_IMAGE, (SCREEN_WIDTH, SCREEN_HEIGHT)) 
+BG_IMAGE = pygame.image.load(os.path.join('assets', 'backround.png'))
+BG = pygame.transform.scale(BG_IMAGE, (WIDTH, HEIGHT)) 
 
 FLOOR_IMAGE = pygame.image.load(os.path.join('assets', 'maze.png'))
 
-COMPUTER_IMAGE = pygame.image.load(os.path.join('assets', 'download (1).jpg'))
-COMPUTER = pygame.transform.scale(COMPUTER_IMAGE, (COMP_WIDTH,COMP_HEIGHT))
 
-PLAYER_IMAGE = pygame.image.load(os.path.join('assets', 'Untitled.png'))
+MID_GAME_IMAGE = pygame.image.load(os.path.join('assets', 'mid_game.png'))
+MID_GAME = pygame.transform.scale(MID_GAME_IMAGE, (WIDTH, HEIGHT))
+
+END_GAME_IMAGE = pygame.image.load(os.path.join('assets', 'endscreen_bg.png'))
+END_GAME = pygame.transform.scale(END_GAME_IMAGE, (WIDTH, HEIGHT))
+
+start_time = pygame.time.get_ticks()
+while pygame.time.get_ticks() < start_time+15000:
+    screen.blit(MID_GAME, (0,0))
+    pygame.display.update()
+
+
+
+#COMPUTER_IMAGE = pygame.image.load(os.path.join('assets', 'download (1).jpg'))
+#COMPUTER = pygame.transform.scale(COMPUTER_IMAGE, (COMP_WIDTH,COMP_HEIGHT))
+
+PLAYER_IMAGE = pygame.image.load(os.path.join('assets', 'character.png'))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -54,10 +68,10 @@ MAZE_MAP = [
 "+ +++++++  +++++ ++++++++++++ +++++++ +++++ +",
 "+ +   +                  +            +   + +",
 "+ +   +                  +            +   + +",
-"+ + +   +  + + + +++++ +   +  + + +++   + + +",
+"+ + +   +  + +++ +++++ +   +  + + +++   + + +",
 "+ + +   +  + + + +     +   +  + +   +   + + +",
 "+   +++++  +++ +++ +++++++++  + + + +++++ + +",
-"+   +   +    + +   +     +    + + + +   + + +",
+"+   +   +  + + +   +     +    + + + +   + + +",
 "+++++   +  + + + +++     +  +++ +++ +   + + +",
 "+   +   +  +   +   +     +  + +     +   +   +",
 "+ + +++ +  + + +++ +     +  + + + +++++ +++ +",
@@ -84,7 +98,7 @@ MAZE_MAP = [
 "+++++++++++++++++++++++++++++++++++++++++++++"
 ]
 
-CELL_SIZE = min(SCREEN_WIDTH // len(MAZE_MAP[0]), SCREEN_HEIGHT // len(MAZE_MAP))
+CELL_SIZE = min(WIDTH // len(MAZE_MAP[0]), HEIGHT // len(MAZE_MAP))
 
 PLAYER = pygame.transform.scale(PLAYER_IMAGE, (CELL_SIZE, CELL_SIZE))
 
@@ -93,32 +107,31 @@ MAZE_HEIGHT = len(MAZE_MAP) * CELL_SIZE
 
 FLOOR = pygame.transform.scale(FLOOR_IMAGE, (MAZE_WIDTH, MAZE_HEIGHT))
 
-MAZE_X = (SCREEN_WIDTH - MAZE_WIDTH) // 2
-MAZE_Y = (SCREEN_HEIGHT - MAZE_HEIGHT) // 2
+MAZE_X = (WIDTH - MAZE_WIDTH) // 2
+MAZE_Y = (HEIGHT - MAZE_HEIGHT) // 2
 
 code_output = ""
 
 
 def open_task_window():
-    button = pygame.Rect(SCREEN_WIDTH//2 - BUTTON_WIDTH//2, SCREEN_HEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
+    button = pygame.Rect(WIDTH//2 - BUTTON_WIDTH//2, HEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
 
-    font = pygame.font.SysFont("comicsansms", 24)
+    font = pygame.font.SysFont("comicsansms", 18)
     surf = font.render('Submit', True, 'white')
 
-    task_screen = pygame.display.set_mode((800, 500))
+    task_screen = pygame.display.set_mode((1000, 512))
     pygame.display.set_caption("Task Code")
     task_screen.fill(GRAY)
 
-    task_code = "Napishi programa"
+    task_code = "For whoever is reading this, you already know why you are here, to get back to the present, you must write a \n python function that takes a list of strings as input and returns and prints a new list (len_list) \n containing the lengths of those strings. Use the string list list = [“Hacktues”, ”Elsys” , “Bojidar”]"
 
     input_text = "" 
 
     
-    input_font = pygame.font.SysFont("comicsansms", 20)
+    input_font = pygame.font.SysFont("comicsansms", 14)
+    cursor_position = 0
 
     running = True
-    
-    task_screen.fill(GRAY) 
 
     while running:
 
@@ -130,6 +143,13 @@ def open_task_window():
                 if button.x <= a <= button.x + BUTTON_WIDTH and button.y <= b <= button.y + BUTTON_HEIGHT:
                     result = execute_python_code(input_text)
                     print(result)
+                    if result == "[8, 5, 7]":
+                        start_time = pygame.time.get_ticks()
+                        while pygame.time.get_ticks() < start_time+10000:
+                            screen.blit(END_GAME, (0,0))
+                            pygame.display.update()
+                        
+                    pygame.quit()
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -139,15 +159,25 @@ def open_task_window():
                     input_text = input_text[:-1]
                     
                     task_screen.fill(GRAY) 
+                elif event.key == pygame.K_TAB:
+                    input_text += "    "
+                elif event.key == pygame.K_LEFT:
+                    cursor_position -= 1
+                    print(cursor_position)
+                elif event.key == pygame.K_RIGHT:
+                    cursor_position += 1
+                    print(cursor_position)
                 else:
+                    task_screen.fill(GRAY) 
                     input_text += event.unicode
-
+                    cursor_position += 1
+    
         a,b = pygame.mouse.get_pos()
         if button.x <= a <= button.x + BUTTON_WIDTH and button.y <= b <= button.y + BUTTON_HEIGHT:
             pygame.draw.rect(screen,(180,180,180),button )
         else:
             pygame.draw.rect(screen, (110,110,110),button)
-        screen.blit(surf,(button.x +5, button.y+5))
+        screen.blit(surf,(button.x + 35, button.y + 8))
         pygame.display.update()
 
 
@@ -162,21 +192,25 @@ def open_task_window():
 
         pygame.display.flip()  
 
+
+
+
     pygame.quit()
 
 def show_code(input_text, task_screen):
     input_font = pygame.font.SysFont("arial", 20)
     input_lines = input_text.split("\n")
-    y_offset = SCREEN_HEIGHT // 2 - 50
+    y_offset = HEIGHT // 2 - 50
     for line in input_lines:
         input_surface = input_font.render(line, True, WHITE)
         task_screen.blit(input_surface, (50, y_offset))
-        y_offset += input_font.get_height() + 5  
+        
+        y_offset += input_font.get_height() + 5 
 
 
 def main():
 
-    comp = pygame.Rect( SCREEN_WIDTH//2 - COMP_WIDTH//2, SCREEN_HEIGHT//2 - COMP_HEIGHT//2, COMP_WIDTH, COMP_HEIGHT)
+    comp = pygame.Rect( WIDTH//2 - COMP_WIDTH//2, HEIGHT//2 - COMP_HEIGHT//2, COMP_WIDTH, COMP_HEIGHT)
 
     player_pos = None
     for y, row in enumerate(MAZE_MAP):
@@ -190,10 +224,10 @@ def main():
     clock = pygame.time.Clock()
     running = True
     while running:
-        clock.tick(20)
+        clock.tick(40)
         screen.blit(BG, (0, 0))
-        #screen.blit(FLOOR, (MAZE_X, MAZE_Y))
-        screen.blit(COMPUTER, (comp.x, comp.y))
+        screen.blit(FLOOR, (MAZE_X, MAZE_Y))
+        #screen.blit(COMPUTER, (comp.x, comp.y))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
