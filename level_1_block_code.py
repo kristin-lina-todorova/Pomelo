@@ -70,5 +70,45 @@ def main():
 
     pygame.quit()
 
+def run_level(screen):
+    pygame.init()
+    clock = pygame.time.Clock()
+
+    run = True
+    active_box = None  
+
+    while run:
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                break
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    for num, box in enumerate(boxes):
+                        if box.collidepoint(event.pos):
+                            active_box = num
+            if event.type == pygame.MOUSEMOTION:
+                if active_box is not None:
+                    boxes[active_box].move_ip(event.rel)
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    if active_box is not None:
+                        for place in places:
+                            if place.colliderect(boxes[active_box]):
+                                boxes[active_box].center = place.center
+                        active_box = None
+
+        screen.fill((0, 0, 0))  
+        draw(places, boxes)     
+        pygame.display.flip()   
+
+    pygame.quit()
+
+
 if __name__ == "__main__":
-    main()
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Level 2")
+
+    run_level(screen)

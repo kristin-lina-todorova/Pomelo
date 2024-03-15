@@ -13,11 +13,11 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 WIN = pygame.display.set_mode((WIDTH, HEIGHT)) 
 pygame.display.set_caption("Labyrinth game")
 
-BG_IMAGE = pygame.image.load(os.path.join('assets', '436175.png'))
+BG_IMAGE = pygame.image.load(os.path.join('level_4_maze', 'level_4_maze_bg.png'))
 BG = pygame.transform.scale(BG_IMAGE, (WIDTH, HEIGHT)) 
 
-COMPUTER_IMAGE = pygame.image.load(os.path.join('assets', 'download (1).jpg'))
-COMPUTER = pygame.transform.scale(COMPUTER_IMAGE, ())
+COMPUTER_IMAGE = pygame.image.load(os.path.join('level_4_maze', 'level_4_maze_broken_pc.jpg'))
+COMPUTER = pygame.transform.scale(COMPUTER_IMAGE, (50, 50))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -75,15 +75,10 @@ CELL_SIZE = min(WIDTH // len(MAZE_MAP[0]), HEIGHT // len(MAZE_MAP))
 
 MAZE_WIDTH = len(MAZE_MAP[0]) * CELL_SIZE
 MAZE_HEIGHT = len(MAZE_MAP) * CELL_SIZE
-
 MAZE_X = (WIDTH - MAZE_WIDTH) // 2
 MAZE_Y = (HEIGHT - MAZE_HEIGHT) // 2
 
-
-
-
-
-def main():
+def run_level(screen):
     player_pos = None
     for y, row in enumerate(MAZE_MAP):
         for x, cell in enumerate(row):
@@ -126,7 +121,15 @@ def main():
             if MAZE_MAP[int((player_pos[1] - MAZE_Y + CELL_SIZE) // CELL_SIZE)][int((player_pos[0] - MAZE_X) // CELL_SIZE)] == " ":
                 player_pos = (player_pos[0], player_pos[1] + CELL_SIZE)
 
-    pygame.quit()
-    sys.exit()
 
-main()
+def main():
+    pygame.init()
+
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Level 3")
+
+    run_level(screen)
+
+if __name__ == "__main__":
+    main()
+

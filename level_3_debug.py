@@ -3,8 +3,8 @@ import sys
 
 pygame.init()
 
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 5120
+WIDTH = 1000
+HEIGHT = 512
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -76,7 +76,7 @@ def handle_debug_events(screen):
         pygame.display.flip()
 
 def main():
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Debugging Game")
 
     global entered_code
@@ -130,5 +130,13 @@ def main():
     pygame.quit()
     sys.exit()
 
+def run_level(screen):
+    pygame.init()
+    clock = pygame.time.Clock()
+    
 if __name__ == "__main__":
-    main()
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Level 2")
+
+    run_level(screen)

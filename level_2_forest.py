@@ -161,6 +161,22 @@ def main():
         draw(screen)
     pygame.quit()
 
+def run_level(screen):
+    pygame.init()
+    clock = pygame.time.Clock()
+
+    WIDTH = 1000
+    HEIGHT = 512
+    FONT = pygame.font.SysFont("comicsans", 30)
+
+    tile_size = 20
+    BG = pygame.transform.scale(pygame.image.load("bg.png"), (WIDTH, HEIGHT))
+
+
 
 if __name__ == "__main__":
-    main()
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Level 2")
+
+    run_level(screen)
