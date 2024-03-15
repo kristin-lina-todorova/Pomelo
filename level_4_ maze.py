@@ -5,8 +5,8 @@ from io import StringIO
 from level_4_compile import execute_python_code
 pygame.init()
 
-WIDTH = 1000
-HEIGHT = 512 
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 512 
 
 COMP_WIDTH = 40
 COMP_HEIGHT = 30
@@ -16,12 +16,12 @@ BUTTON_HEIGHT = 50
 
 FONT = pygame.font.SysFont("comicsans", 30)
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 pygame.display.set_caption("Labyrinth game")
 
 BG_IMAGE = pygame.image.load(os.path.join('assets', '436175.png'))
-BG = pygame.transform.scale(BG_IMAGE, (WIDTH, HEIGHT)) 
+BG = pygame.transform.scale(BG_IMAGE, (SCREEN_WIDTH, SCREEN_HEIGHT)) 
 
 FLOOR_IMAGE = pygame.image.load(os.path.join('assets', 'maze.png'))
 
@@ -84,7 +84,7 @@ MAZE_MAP = [
 "+++++++++++++++++++++++++++++++++++++++++++++"
 ]
 
-CELL_SIZE = min(WIDTH // len(MAZE_MAP[0]), HEIGHT // len(MAZE_MAP))
+CELL_SIZE = min(SCREEN_WIDTH // len(MAZE_MAP[0]), SCREEN_HEIGHT // len(MAZE_MAP))
 
 PLAYER = pygame.transform.scale(PLAYER_IMAGE, (CELL_SIZE, CELL_SIZE))
 
@@ -93,14 +93,14 @@ MAZE_HEIGHT = len(MAZE_MAP) * CELL_SIZE
 
 FLOOR = pygame.transform.scale(FLOOR_IMAGE, (MAZE_WIDTH, MAZE_HEIGHT))
 
-MAZE_X = (WIDTH - MAZE_WIDTH) // 2
-MAZE_Y = (HEIGHT - MAZE_HEIGHT) // 2
+MAZE_X = (SCREEN_WIDTH - MAZE_WIDTH) // 2
+MAZE_Y = (SCREEN_HEIGHT - MAZE_HEIGHT) // 2
 
 code_output = ""
 
 
 def open_task_window():
-    button = pygame.Rect(WIDTH//2 - BUTTON_WIDTH//2, HEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
+    button = pygame.Rect(SCREEN_WIDTH//2 - BUTTON_WIDTH//2, SCREEN_HEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
 
     font = pygame.font.SysFont("comicsansms", 24)
     surf = font.render('Submit', True, 'white')
@@ -167,16 +167,16 @@ def open_task_window():
 def show_code(input_text, task_screen):
     input_font = pygame.font.SysFont("arial", 20)
     input_lines = input_text.split("\n")
-    y_offset = HEIGHT // 2 - 50
+    y_offset = SCREEN_HEIGHT // 2 - 50
     for line in input_lines:
         input_surface = input_font.render(line, True, WHITE)
         task_screen.blit(input_surface, (50, y_offset))
-        y_offset += input_font.get_height() + 5  # Add some spacing between lines
+        y_offset += input_font.get_height() + 5  
 
 
 def main():
 
-    comp = pygame.Rect( WIDTH//2 - COMP_WIDTH//2, HEIGHT//2 - COMP_HEIGHT//2, COMP_WIDTH, COMP_HEIGHT)
+    comp = pygame.Rect( SCREEN_WIDTH//2 - COMP_WIDTH//2, SCREEN_HEIGHT//2 - COMP_HEIGHT//2, COMP_WIDTH, COMP_HEIGHT)
 
     player_pos = None
     for y, row in enumerate(MAZE_MAP):
