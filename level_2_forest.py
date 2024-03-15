@@ -1,11 +1,8 @@
 import pygame
 import sys
 import tkinter as tk
-
-# Инициализация на Pygame
 pygame.init()
 
-# Дефиниране на цветовете
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -79,19 +76,6 @@ class Player():
                     elif self.vel_y >= 0:
                         dy = tile[1].top - self.rect.bottom
                         self.vel_y = 0
-
-
-        # if question_displayed:
-        #     root.update()
-            # if not root.winfo_exists():
-            #     question_displayed = False  # След като прозорецът за въпрос е затворен, задайте question_displayed на False
-            #     # Върнете контрола към играта тук
-
-        # # check for collision
-        # for tile in world.tile_list:
-            
-                #and not tile_group.visited
-                # If the player collides with tile[1], show the question window
                 
 
         # update player coordinates
@@ -113,7 +97,7 @@ class TileGroup():
 
 class World():
     def __init__(self, data):
-        self.tile_list = [] # groups
+        self.tile_list = []
         self.tile_groups = []
 
         dirt_img = pygame.image.load('dot2.png')
@@ -126,7 +110,6 @@ class World():
             for tile in row:
                 if tile == 1:
                     # start group
-
                     img = pygame.transform.scale(dirt_img, (tile_size, tile_size))
                     img_rect = img.get_rect()
                     img_rect.x = col_count * tile_size
@@ -170,7 +153,7 @@ world_data = [
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ]
 
-# Инициализация на играч и свят
+
 player = Player(0, 0)
 world = World(world_data)
 
@@ -181,7 +164,7 @@ def draw(screen):
     pygame.display.update()
 
 def show_question():
-    global root, question_displayed # Дефинирайте root и question_displayed като глобални променливи
+    global root, question_displayed
     root = tk.Tk()
     root.geometry("300x100")
     root.title("Answer the Question")
@@ -205,7 +188,7 @@ def show_question():
     button.pack()
     root.mainloop()
 
-question_displayed = False  # Инициализирайте question_displayed като False преди основния цикъл
+question_displayed = False 
 
 clock = pygame.time.Clock()
 
@@ -224,13 +207,10 @@ while run:
             x, y = pygame.mouse.get_pos()
             if player.rect.collidepoint(x, y):
                 show_question()
-
-    # Проверка дали отговорът е даден и затваряне на прозореца
     if question_displayed:
         root.update()
         if not root.winfo_exists():
             question_displayed = False
-            # Върнете контрола към играта тук
 
 
 pygame.quit()
