@@ -1,87 +1,134 @@
 import pygame
+import sys
 
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 5120
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GRAY = (200, 200, 200)
+GRAY = (128, 128, 128)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
-font = pygame.font.Font(None, 36)
 
-# debugging_code = "def debug_code(code):\n    # Add debugging logic here\n    return code"
+font = pygame.font.Font(None, 32)
 
-def execute_debugging_code(user_code):
-    pass
+correct_code = "1234"
+entered_code = ""
 
-def shuffle_code():
-    code = [4, 3, 8, 7]
-    code = [code[-1]] + code[:-1]
-    return code
-
-def check_code(code):
-    return code == [4, 3, 8, 7]
-
-
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Code Decipher")
-
-code = [0, 0, 0, 0]  
-code_rects = [pygame.Rect(200 + i * 100, 200, 80, 80) for i in range(4)]
-dragging = False
-selected_rect = None
-mouse_offset = (0, 0)
-door_open = False
-
-
-running = True
-while running:
+def draw_main_screen(screen):
     screen.fill(WHITE)
+    pygame.draw.rect(screen, GRAY, (50, 50, 700, 200))  
+    pygame.draw.rect(screen, BLACK, (50, 300, 700, 250))  
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if 100 < event.pos[0] < 700 and 50 < event.pos[1] < 150:
-                pass
-            for rect in code_rects:
-                if rect.collidepoint(event.pos):
-                    dragging = True
-                    selected_rect = rect
-                    mouse_offset = (rect.x - event.pos[0], rect.y - event.pos[1])
-        elif event.type == pygame.MOUSEBUTTONUP:
-            dragging = False
-            if selected_rect:
-                selected_rect = None
-        elif event.type == pygame.MOUSEMOTION:
-            if dragging and selected_rect:
-                selected_rect.x = event.pos[0] + mouse_offset[0]
-                selected_rect.y = event.pos[1] + mouse_offset[1]
 
-    pygame.draw.rect(screen, GRAY, (100, 50, 600, 100))
-    debug_code_surface = font.render(debugging_code, True, BLACK)
-    screen.blit(debug_code_surface, (110, 60))
+    rules_text = [
+        "Debug the provided code to get the combination.",
+        "Enter the 4-digit combination to unlock the door.",
+        "Click on the boxes on the door to enter digits.",
+        "Click 'Submit' after debugging code to check the combination."
+    ]
+    for i, text in enumerate(rules_text):
+        text_surface = font.render(text, True, BLACK)
+        screen.blit(text_surface, (70, 70 + i * 40))
 
-    for rect, digit in zip(code_rects, code):
-        pygame.draw.rect(screen, GRAY, rect)
-        text_surface = font.render(str(digit), True, BLACK)
-        text_rect = text_surface.get_rect(center=rect.center)
-        screen.blit(text_surface, text_rect)
+    submit_button = pygame.Rect(350, 500, 100, 50)
+    pygame.draw.rect(screen, BLACK, submit_button)
+    submit_text = font.render("Submit", True, WHITE)
+    screen.blit(submit_text, (submit_button.x + 20, submit_button.y + 15))
 
-    if check_code(code):
-        door_open = True
-
-    door_color = GREEN if door_open else RED
-    pygame.draw.rect(screen, door_color, (300, 450, 200, 100))
-    door_text = font.render("Door", True, BLACK)
-    door_text_rect = door_text.get_rect(center=(400, 500))
-    screen.blit(door_text, door_text_rect)
+    entered_text = font.render("Entered Code: " + entered_code, True, BLACK)
+    screen.blit(entered_text, (50, 275))
 
     pygame.display.flip()
 
-pygame.quit()
+def draw_debug_window(screen):
+    pygame.draw.rect(screen, GRAY, (100, 100, 600, 400))  
+    pygame.draw.rect(screen, BLACK, (300, 520, 200, 50))  
 
+    debug_text = font.render("Debug Code:", True, BLACK)
+    screen.blit(debug_text, (110, 110))
+
+    pygame.display.flip()
+
+def handle_debug_events(screen):
+    global entered_code
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    entered_code = entered_code[:-1]
+                elif event.key == pygame.K_RETURN:
+                    return
+                else:
+                    entered_code += event.unicode
+
+        screen.fill(WHITE)
+        draw_debug_window(screen)
+        pygame.display.flip()
+
+def main():
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Debugging Game")
+
+    global entered_code
+
+    attempts = 0
+    unlocked = False
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                if 50 <= x <= 300 and 300 <= y <= 550:  
+                    digit = str((x - 50) // 50)
+                    if len(entered_code) < 4:
+                        entered_code += digit
+                elif 350 <= x <= 450 and 500 <= y <= 550:  
+                    if len(entered_code) == 4:
+                        if entered_code == correct_code:
+                            unlocked = True
+                        else:
+                            attempts += 1
+                            entered_code = ""
+                    else:
+                        attempts += 1
+                        entered_code = ""
+
+        screen.fill(WHITE)
+        draw_main_screen(screen)
+
+        if unlocked:
+            unlocked_text = font.render("Door Unlocked! Proceed to Next Level.", True, GREEN)
+            screen.blit(unlocked_text, (200, 550))
+        elif attempts >= 3:
+            attempts_text = font.render("Max Attempts Reached! Game Over.", True, RED)
+            screen.blit(attempts_text, (250, 550))
+        else:
+            if len(entered_code) == 4:
+                attempts_text = font.render("Wrong Code! Attempts: " + str(attempts), True, RED)
+                screen.blit(attempts_text, (300, 550))
+
+        pygame.display.flip()
+
+        if not unlocked and attempts < 3:
+            if len(entered_code) < 4:
+                handle_debug_events(screen)
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
