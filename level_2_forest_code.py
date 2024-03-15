@@ -12,13 +12,15 @@ HEIGHT = 512
 
 FONT = pygame.font.SysFont("comicsans", 30)
 
+num = 0
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Game with python!")
 
 tile_size = 20
-BG = pygame.transform.scale(pygame.image.load("bg.png"), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load("level_2_trees_bg.png"), (WIDTH, HEIGHT))
 
-class Player():
+class Player(): 
     def __init__(self, x, y):
         img = pygame.image.load('jay.png')
         self.image = pygame.transform.scale(img, (80, 80))
@@ -35,7 +37,7 @@ class Player():
     def update(self):
         dx = 0
         dy = 0
-
+        num = 0
         # get keypresses
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE] and self.jumped == False:
@@ -144,12 +146,12 @@ world_data = [
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
-     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
-     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1],
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ]
 
@@ -163,13 +165,17 @@ def draw(screen):
     player.update()
     pygame.display.update()
 
+
+questions = ["What is 2 + 2?", "What is the capital of France?", "Who wrote 'Romeo and Juliet'?", "What is 3 + 4?", "What is 1 + 1?"]
+answers = ["4", "Paris", "WS", "7", "2"]
+
 def show_question():
     global root, question_displayed
     root = tk.Tk()
     root.geometry("300x100")
     root.title("Answer the Question")
 
-    label = tk.Label(root, text="What is 2 + 2?")
+    label = tk.Label(root, text=questions[num])
     label.pack()
 
     entry = tk.Entry(root)
@@ -179,20 +185,25 @@ def show_question():
     message_label.pack()
 
     def check_answer():
+        global num
+        print(num)
+
         answer = entry.get()
-        if answer == "4":
+        if answer.lower() == answers[num].lower():
             root.destroy() 
             question_displayed = False
-        else: message_label.config(text="Incorrect answer")
+            num += 1
+        else:
+            message_label.config(text="Incorrect answer")
 
 
     button = tk.Button(root, text="Submit", command=check_answer)
     button.pack()
 
     def on_closing():
-        root.destroy()
+        root.destroy(),
         question_displayed = False
-        show_question()
+        show_question(num)
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
 
@@ -216,7 +227,7 @@ while run:
         if pygame.mouse.get_pressed()[2]:
             x, y = pygame.mouse.get_pos()
             if player.rect.collidepoint(x, y):
-                show_question()
+                show_question(num)
     if question_displayed:
         root.update()
         if not root.winfo_exists():
