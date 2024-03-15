@@ -3,10 +3,6 @@ import sys
 import tkinter as tk
 pygame.init()
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-
 WIDTH = 1000
 HEIGHT = 512
 
@@ -102,7 +98,7 @@ class World():
         self.tile_list = []
         self.tile_groups = []
 
-        dirt_img = pygame.image.load('dot2.png')
+        dirt_img = pygame.image.load('dot.png')
 
         row_count = 0
         for row in data:
@@ -128,7 +124,6 @@ class World():
         for tile_group in self.tile_groups:
             for tile in tile_group.tile_list:
                 screen.blit(tile[0], tile[1])
-                pygame.draw.rect(screen, (255, 205, 255), tile[1], 2)
 
 world_data = [
      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -166,13 +161,18 @@ def draw(screen):
     pygame.display.update()
 
 
-questions = ["What is 2 + 2?", "What is the capital of France?", "Who wrote 'Romeo and Juliet'?", "What is 3 + 4?", "What is 1 + 1?"]
-answers = ["4", "Paris", "WS", "7", "2"]
+questions = ["Коя е основната функция на една програма, \n която един или повече оператори \nи/или други функции?",
+             "Коя част на програмата извършва определени действия,\n като може да приема аргументи и връща резултат?",
+             "Кой тип се използва за дефиниране на\n целочислени числа?",
+             "Кои са променливите, които съдържат адрес на паметта,\n където се намира стойността\n на друга променлива или обект?", 
+             "При коя техника в програмирането функция\n се извиква от самата себе си по време на\n своето изпълнение?"]
+
+answers = ["main", "функция", "int", "указатели", "рекурсия"]
 
 def show_question():
     global root, question_displayed
     root = tk.Tk()
-    root.geometry("300x100")
+    root.geometry("500x150")
     root.title("Answer the Question")
 
     label = tk.Label(root, text=questions[num])
@@ -201,9 +201,10 @@ def show_question():
     button.pack()
 
     def on_closing():
-        root.destroy(),
-        question_displayed = False
-        show_question(num)
+        if not question_displayed:
+            root.destroy()
+            show_question()
+
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
 
