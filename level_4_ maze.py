@@ -2,7 +2,7 @@ import pygame
 import sys
 import os
 from io import StringIO
-
+from compile import execute_python_code
 pygame.init()
 
 WIDTH = 1000
@@ -10,6 +10,10 @@ HEIGHT = 512
 
 COMP_WIDTH = 40
 COMP_HEIGHT = 30
+
+BUTTON_WIDTH = 150
+BUTTON_HEIGHT = 50
+
 FONT = pygame.font.SysFont("comicsans", 30)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -29,6 +33,7 @@ PLAYER_IMAGE = pygame.image.load(os.path.join('assets', 'Untitled.png'))
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
+GRAY = (39, 42, 46)
 
 MAZE_MAP = [
 
@@ -93,66 +98,80 @@ MAZE_Y = (HEIGHT - MAZE_HEIGHT) // 2
 
 code_output = ""
 
-def compile_and_execute(code):
-    global code_output
-    stdout_orig = sys.stdout
-    sys.stdout = StringIO()
-    try:
-        exec(code)
-        code_output = sys.stdout.getvalue()
-    except Exception as e:
-        code_output = f"Error: {e}"
-    finally:
-        sys.stdout = stdout_orig
-    print(code_output)
-
 
 def open_task_window():
-    task_screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    button = pygame.Rect(WIDTH//2 - BUTTON_WIDTH//2, HEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+    font = pygame.font.SysFont("comicsansms", 24)
+    surf = font.render('Submit', True, 'white')
+
+    task_screen = pygame.display.set_mode((800, 500))
     pygame.display.set_caption("Task Code")
-    task_screen.fill(WHITE)
+    task_screen.fill(GRAY)
 
     task_code = "Napishi programa"
 
     input_text = "" 
 
-    font = pygame.font.SysFont("comicsansms", 24)
-    input_font = pygame.font.SysFont("comicsansms", 24)
+    
+    input_font = pygame.font.SysFont("comicsansms", 20)
 
     running = True
+    
+    task_screen.fill(GRAY) 
+
     while running:
-        task_screen.fill(WHITE)  
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                a,b = pygame.mouse.get_pos()
+                if button.x <= a <= button.x + BUTTON_WIDTH and button.y <= b <= button.y + BUTTON_HEIGHT:
+                    result = execute_python_code(input_text)
+                    print(result)
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    print("User Input:", input_text)
-                    f = open("code_from_task.py", "a")
-                    f.write(input_text)
-                    f.close()
-                    compile_and_execute(input_text)
-                    running = False
+                    input_text += '\n'
+
                 elif event.key == pygame.K_BACKSPACE:
                     input_text = input_text[:-1]
+                    
+                    task_screen.fill(GRAY) 
                 else:
                     input_text += event.unicode
+
+        a,b = pygame.mouse.get_pos()
+        if button.x <= a <= button.x + BUTTON_WIDTH and button.y <= b <= button.y + BUTTON_HEIGHT:
+            pygame.draw.rect(screen,(180,180,180),button )
+        else:
+            pygame.draw.rect(screen, (110,110,110),button)
+        screen.blit(surf,(button.x +5, button.y+5))
+        pygame.display.update()
+
 
         lines = task_code.split("\n")
         y_offset = 50
         for line in lines:
-            text_surface = font.render(line, True, BLACK)
+            text_surface = font.render(line, True, WHITE)
             task_screen.blit(text_surface, (50, y_offset))
             y_offset += 30
 
-        input_surface = input_font.render("Input: " + input_text, True, BLACK)
-        task_screen.blit(input_surface, (50, HEIGHT - 50))
+        show_code(input_text, task_screen)
 
-        pygame.display.flip()  # Update the display
+        pygame.display.flip()  
 
     pygame.quit()
 
+def show_code(input_text, task_screen):
+    input_font = pygame.font.SysFont("arial", 20)
+    input_lines = input_text.split("\n")
+    y_offset = HEIGHT // 2 - 50
+    for line in input_lines:
+        input_surface = input_font.render(line, True, WHITE)
+        task_screen.blit(input_surface, (50, y_offset))
+        y_offset += input_font.get_height() + 5  # Add some spacing between lines
 
 
 def main():
@@ -202,6 +221,8 @@ def main():
         pygame.display.update()
 
         keys = pygame.key.get_pressed()
+        if keys[pygame.K_k]:
+            open_task_window()
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             if MAZE_MAP[int((player_pos[1] - MAZE_Y) // CELL_SIZE)][int((player_pos[0] - MAZE_X - CELL_SIZE) // CELL_SIZE)] == " ":
                 player_pos = (player_pos[0] - CELL_SIZE, player_pos[1])
