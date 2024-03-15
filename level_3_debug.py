@@ -3,8 +3,11 @@ import sys
 
 pygame.init()
 
-WIDTH = 1000
-HEIGHT = 512
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 512
+
+BUTTON_WIDTH = 150
+BUTTON_HEIGHT = 50
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -12,36 +15,67 @@ GRAY = (128, 128, 128)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
+FONT = pygame.font.SysFont("comicsans", 32)
 
-FONT = pygame.font.Font("comicsans", 32)
-BG = pygame.transform.scale(pygame.image.load("level_3_debug\level_3_basement_bg.png"), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load("level_3_debug\level_3_basement_bg.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+button = pygame.Rect(SCREEN_WIDTH//2 - BUTTON_WIDTH//2, SCREEN_HEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
 
-correct_code = "1234"
-entered_code = ""
+correct_debugged_code = """def shift_digits(number):
+    shift_value = 3
+    shifted_number = ""
+    for digit in str(number):
+        shifted_digit = (int(digit) + shift_value) % 10
+        shifted_number += str(shifted_digit)
+        shift_value += 2
+        
+    return int(shifted_number)
 
-def draw_main_screen(screen):
-    screen.fill(WHITE)
-    pygame.draw.rect(screen, GRAY, (50, 50, 700, 200))  
-    pygame.draw.rect(screen, BLACK, (50, 300, 700, 250))  
+original_number = 4387
+shifted_number = shift_digits(original_number)
+print(f"Original number: {original_number}")
+print(f"Shifted number: {shifted_number}") """
 
+wrong_debugged_code = """"def shift_digits(number):
+    shift_value = 3
+    shifted_number = ""
+    for digit in str(number):
+        shifted_digit = digit + shift_value % 10
+        shifted_digit += str(shifted_digit)
+        shift_value += 4
+        
+    return int(shifted_number)
 
-    rules_text = [
+original_number = 4387
+shifted_number = shift_number(original_number)
+print(f"Original number: {original_number}")
+print(f"Shifted number: {shifted_number}") """
+
+rules_text = [
         "Debug the provided code to get the combination.",
         "Enter the 4-digit combination to unlock the door.",
         "Click on the boxes on the door to enter digits.",
         "Click 'Submit' after debugging code to check the combination."
     ]
+
+original_code = "4387"
+correct_code = "7856"
+
+def draw_main_screen(screen):
+    screen.fill(BG)
+    pygame.draw.rect(screen, WHITE, (50, 50, 700, 200))  
+    pygame.draw.rect(screen, BLACK, (50, 300, 700, 250))  
+
     for i, text in enumerate(rules_text):
-        text_surface = font.render(text, True, BLACK)
+        text_surface = FONT.render(text, True, BLACK)
         screen.blit(text_surface, (70, 70 + i * 40))
 
     submit_button = pygame.Rect(350, 500, 100, 50)
     pygame.draw.rect(screen, BLACK, submit_button)
-    submit_text = font.render("Submit", True, WHITE)
+    submit_text = FONT.render("Submit", True, WHITE)
     screen.blit(submit_text, (submit_button.x + 20, submit_button.y + 15))
 
-    entered_text = font.render("Entered Code: " + entered_code, True, BLACK)
+    entered_text = FONT.render("Entered Code: " + entered_code, True, BLACK)
     screen.blit(entered_text, (50, 275))
 
     pygame.display.flip()
@@ -50,7 +84,7 @@ def draw_debug_window(screen):
     pygame.draw.rect(screen, GRAY, (100, 100, 600, 400))  
     pygame.draw.rect(screen, BLACK, (300, 520, 200, 50))  
 
-    debug_text = font.render("Debug Code:", True, BLACK)
+    debug_text = FONT.render("Debug Code:", True, BLACK)
     screen.blit(debug_text, (110, 110))
 
     pygame.display.flip()
@@ -78,7 +112,7 @@ def handle_debug_events(screen):
         pygame.display.flip()
 
 def main():
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Debugging Game")
 
     global entered_code
@@ -113,14 +147,14 @@ def main():
         draw_main_screen(screen)
 
         if unlocked:
-            unlocked_text = font.render("Door Unlocked! Proceed to Next Level.", True, GREEN)
+            unlocked_text = FONT.render("Door Unlocked! Proceed to Next Level.", True, GREEN)
             screen.blit(unlocked_text, (200, 550))
         elif attempts >= 3:
-            attempts_text = font.render("Max Attempts Reached! Game Over.", True, RED)
+            attempts_text = FONT.render("Max Attempts Reached! Game Over.", True, RED)
             screen.blit(attempts_text, (250, 550))
         else:
             if len(entered_code) == 4:
-                attempts_text = font.render("Wrong Code! Attempts: " + str(attempts), True, RED)
+                attempts_text = FONT.render("Wrong Code! Attempts: " + str(attempts), True, RED)
                 screen.blit(attempts_text, (300, 550))
 
         pygame.display.flip()
@@ -138,7 +172,7 @@ def run_level(screen):
     
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     pygame.display.set_caption("Level 2")
 
     run_level(screen)
