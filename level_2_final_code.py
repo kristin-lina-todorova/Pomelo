@@ -11,7 +11,7 @@ FONT = pygame.font.SysFont("comicsans", 30)
 num = 0
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Game with python!")
+pygame.display.set_caption("Techscape")
 
 tile_size = 20
 bg_images = [pygame.transform.scale(pygame.image.load(f"level_2_portal_{i}.png"), (WIDTH, HEIGHT)) for i in range(1, 3)]
@@ -169,7 +169,7 @@ def draw(screen):
     pygame.display.update()
 
 
-questions = ["What is the main function of a program \n which one or more statements \nand/or other functions?",
+questions = ["What is the function of a program \n which one or more statements \nand/or other functions?",
              "Which part of the program performs certain actions\n by accepting arguments and returning a result?",
              "Which type is used to define\n integers?",
              "What are the variables that contain a memory address\n where the value\n of another variable or object resides?", 
