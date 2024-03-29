@@ -1,12 +1,57 @@
 import pygame
+import os
 import tkinter as tk
-import math
 
-pygame.font.init()
+pygame.init()
 
 WIDTH = 1000
-HEIGHT = 512
+HEIGHT = 512 
 
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+pygame.display.set_caption("Dialog")
+
+DIALOG_1_IMAGE = pygame.image.load(os.path.join('dialog_png', 'dialog_1.png'))
+DIALOG_1 = pygame.transform.scale(DIALOG_1_IMAGE, (WIDTH, HEIGHT))
+
+DIALOG_2_IMAGE = pygame.image.load(os.path.join('dialog_png', 'dialog_2.png'))
+DIALOG_2 = pygame.transform.scale(DIALOG_2_IMAGE, (WIDTH, HEIGHT))
+
+DIALOG_3_IMAGE = pygame.image.load(os.path.join('dialog_png', 'dialog_3.png'))
+DIALOG_3 = pygame.transform.scale(DIALOG_3_IMAGE, (WIDTH, HEIGHT))
+
+DIALOG_4_IMAGE = pygame.image.load(os.path.join('dialog_png', 'dialog_4.png'))
+DIALOG_4 = pygame.transform.scale(DIALOG_4_IMAGE, (WIDTH, HEIGHT))
+
+DIALOG_5_IMAGE = pygame.image.load(os.path.join('dialog_png', 'dialog_5.png'))
+DIALOG_5 = pygame.transform.scale(DIALOG_5_IMAGE, (WIDTH, HEIGHT))
+
+start_time = pygame.time.get_ticks()
+while pygame.time.get_ticks() < start_time+5000:
+    screen.blit(DIALOG_1, (0,0))
+    pygame.display.update()
+
+start_time = pygame.time.get_ticks()
+while pygame.time.get_ticks() < start_time+5000:
+    screen.blit(DIALOG_2, (0,0))
+    pygame.display.update()
+
+start_time = pygame.time.get_ticks()
+while pygame.time.get_ticks() < start_time+5000:
+    screen.blit(DIALOG_3, (0,0))
+    pygame.display.update()
+
+start_time = pygame.time.get_ticks()
+while pygame.time.get_ticks() < start_time+5000:
+    screen.blit(DIALOG_4, (0,0))
+    pygame.display.update()
+
+start_time = pygame.time.get_ticks()
+while pygame.time.get_ticks() < start_time+5000:
+    screen.blit(DIALOG_5, (0,0))
+    pygame.display.update()
+    
 BOX_WIDTH_SIZE, BOX_HEIGHT_SIZE = 100, 30
 
 FONT_SIZE = 16
@@ -16,9 +61,10 @@ FONT = pygame.font.SysFont("Arial", FONT_SIZE)
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Techscape")
 
-BG = pygame.transform.scale(pygame.image.load("level1_person_bg_arrows.png"), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load(os.path.join("level1_png", "level_1.png")), (WIDTH, HEIGHT))
 
 boxes = []
+
 
 places = []
 num_places = 6 
@@ -268,13 +314,13 @@ def create_window(message, restart = True):
     window.mainloop()
 
 def check_button_click(pos): 
-    global run  # Declare run as global so it can be modified within this function
+    global run 
     if BUTTON_POSITION[0] <= pos[0] <= BUTTON_POSITION[0] + BUTTON_WIDTH and \
        BUTTON_POSITION[1] <= pos[1] <= BUTTON_POSITION[1] + BUTTON_HEIGHT:
           for i in range(0, len(correct_ids)):
               if placed_ids[i] != correct_ids[i]:
                   create_window("You lost!")
-                  run = False  # Exiting the program when the player loses
+                  run = False 
                   return False
           create_window("First level passed!")
     elif BUTTON_POSITION[0] - BUTTON_WIDTH - 10 <= pos[0] <= BUTTON_POSITION[0] - 10 and \

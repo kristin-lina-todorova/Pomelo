@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 import tkinter as tk
 pygame.init()
 
@@ -14,15 +15,15 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Techscape")
 
 tile_size = 20
-bg_images = [pygame.transform.scale(pygame.image.load(f"level_2_portal_{i}.png"), (WIDTH, HEIGHT)) for i in range(1, 3)]
+bg_images = [pygame.transform.scale(pygame.image.load(os.path.join("level2_png", f"level_2_portal_{i}.png")), (WIDTH, HEIGHT)) for i in range(1, 3)]
 num_images = len(bg_images)
 current_image = 0
 
 class Player():
     def __init__(self, x, y):
         clock = pygame.time.Clock()
-        self.animation_frames = [pygame.transform.scale(pygame.image.load(f'player{i}.png'), (80, 80)) for i in range(1, 9)]
-        self.standing_image = pygame.transform.scale(pygame.image.load('player1.png'), (80, 80))
+        self.animation_frames = [pygame.transform.scale(pygame.image.load(os.path.join("level2_png", f'player{i}.png')), (80, 80)) for i in range(1, 9)]
+        self.standing_image = pygame.transform.scale(pygame.image.load(os.path.join('level2_png', 'player1.png')), (80, 80))
         self.image_index = 0
         self.image = self.animation_frames[self.image_index]
         self.rect = self.image.get_rect()
@@ -107,7 +108,7 @@ class World():
         self.tile_list = []
         self.tile_groups = []
 
-        dirt_img = pygame.image.load('dot.png')
+        dirt_img = pygame.image.load(os.path.join('level2_png', 'dot.png'))
 
         row_count = 0
         for row in data:
