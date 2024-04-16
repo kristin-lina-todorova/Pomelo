@@ -20,16 +20,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Labyrinth game")
 
-BG_IMAGE = pygame.image.load(os.path.join('assets', 'backround.png'))
+BG_IMAGE = pygame.image.load(os.path.join('level4_png', 'backround.png'))
 BG = pygame.transform.scale(BG_IMAGE, (WIDTH, HEIGHT)) 
 
-FLOOR_IMAGE = pygame.image.load(os.path.join('assets', 'maze.png'))
+FLOOR_IMAGE = pygame.image.load(os.path.join('level4_png', 'maze.png'))
 
 
-MID_GAME_IMAGE = pygame.image.load(os.path.join('assets', 'mid_game.png'))
+MID_GAME_IMAGE = pygame.image.load(os.path.join('level4_png', 'mid_game.png'))
 MID_GAME = pygame.transform.scale(MID_GAME_IMAGE, (WIDTH, HEIGHT))
 
-END_GAME_IMAGE = pygame.image.load(os.path.join('assets', 'endscreen_bg.png'))
+END_GAME_IMAGE = pygame.image.load(os.path.join('level4_png', 'endscreen_bg.png'))
 END_GAME = pygame.transform.scale(END_GAME_IMAGE, (WIDTH, HEIGHT))
 
 start_time = pygame.time.get_ticks()
@@ -42,7 +42,7 @@ while pygame.time.get_ticks() < start_time+15000:
 #COMPUTER_IMAGE = pygame.image.load(os.path.join('assets', 'download (1).jpg'))
 #COMPUTER = pygame.transform.scale(COMPUTER_IMAGE, (COMP_WIDTH,COMP_HEIGHT))
 
-PLAYER_IMAGE = pygame.image.load(os.path.join('assets', 'character.png'))
+PLAYER_IMAGE = pygame.image.load(os.path.join('level4_png', 'character.png'))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
